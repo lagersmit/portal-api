@@ -1,0 +1,1471 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Simple Inventory API",
+    "description": "This is a simple API",
+    "contact": {
+      "email": "ferdi.stoeltie@lagersmit.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://virtserver.swaggerhub.com/FERDISTOELTIE/BackendPortalAPI/1.0.0",
+      "description": "SwaggerHub API Auto Mocking"
+    },
+    {
+      "url": "https://webapp-gqbhexq5q5d46.azurewebsites.net/apiv2",
+      "description": "Portal API"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "admins",
+      "description": "Secured Admin-only calls"
+    },
+    {
+      "name": "developers",
+      "description": "Operations available to regular developers"
+    },
+    {
+      "name": "users",
+      "description": "Operations available to regular developers"
+    }
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "tags": [
+          "developers"
+        ],
+        "summary": "Login endpoint",
+        "description": "Login to retrieve a bearer access token.\n",
+        "operationId": "login",
+        "requestBody": {
+          "description": "Login",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/login"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Authentication incorrect"
+          }
+        },
+        "security": []
+      }
+    },
+    "/systems": {
+      "get": {
+        "tags": [
+          "developers"
+        ],
+        "summary": "Get a list of all registered systems",
+        "description": "Get all of the systems that are in registered in the database.\n",
+        "operationId": "GetSystems",
+        "responses": {
+          "200": {
+            "description": "Getting a collection of all available systems.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/system"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access token is missing or invalid",
+            "headers": {
+              "bearer": {
+                "style": "simple",
+                "explode": false,
+                "schema": {
+                  "type": "string",
+                  "description": "Bearer jwt token"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "developers"
+        ],
+        "summary": "Add a new System",
+        "description": "Add a new system to the database\n",
+        "operationId": "PostSystems",
+        "requestBody": {
+          "description": "Post",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/system"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Succesfully created a new system resource and returns this resource as a json object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/system"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access token is missing or invalid",
+            "headers": {
+              "bearer": {
+                "style": "simple",
+                "explode": false,
+                "schema": {
+                  "type": "string",
+                  "description": "Bearer jwt token"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict creating or updating document",
+            "headers": {
+              "WWW_Authenticate": {
+                "style": "simple",
+                "explode": false,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unable to process entity. Make sure fields are correct",
+            "headers": {
+              "WWW_Authenticate": {
+                "style": "simple",
+                "explode": false,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error during processing of request"
+          }
+        }
+      }
+    },
+    "/systems/{systemIndex}": {
+      "get": {
+        "tags": [
+          "developers"
+        ],
+        "summary": "Get the information of a specific system",
+        "description": "Get the information of a specific system\n",
+        "operationId": "getSystem",
+        "parameters": [
+          {
+            "name": "systemIndex",
+            "in": "path",
+            "description": "System index for a specific system",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Getting the information of a specific system",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/system"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access token is missing or invalid",
+            "headers": {
+              "bearer": {
+                "style": "simple",
+                "explode": false,
+                "schema": {
+                  "type": "string",
+                  "description": "Bearer jwt token"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "developers"
+        ],
+        "summary": "Create or update a system",
+        "operationId": "putSystem",
+        "parameters": [
+          {
+            "name": "systemIndex",
+            "in": "path",
+            "description": "System index for a specific system",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Put",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/system"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Succesfully updated or created the system"
+          },
+          "401": {
+            "description": "Access token is missing or invalid",
+            "headers": {
+              "bearer": {
+                "style": "simple",
+                "explode": false,
+                "schema": {
+                  "type": "string",
+                  "description": "Bearer jwt token"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/systems/{systemId}/files": {
+      "get": {
+        "tags": [
+          "developers"
+        ],
+        "summary": "Get the files belonging to a specific system",
+        "description": "Get the files belonging to a specific system\n",
+        "operationId": "getFiles",
+        "parameters": [
+          {
+            "name": "systemId",
+            "in": "path",
+            "description": "System ID for a specific system",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Getting the files belonging to a specific system",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/files"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access token is missing or invalid",
+            "headers": {
+              "bearer": {
+                "style": "simple",
+                "explode": false,
+                "schema": {
+                  "type": "string",
+                  "description": "Bearer jwt token"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/systems/{systemId}/files/csv": {
+      "get": {
+        "tags": [
+          "developers"
+        ],
+        "summary": "Get a list of uploaded csv files",
+        "description": "Get uploaded csv files of a specific system\n",
+        "operationId": "getCsvFileList",
+        "parameters": [
+          {
+            "name": "systemId",
+            "in": "path",
+            "description": "System ID for a specific system",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get a collection of csv files that are registered under this system",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/serverFile"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access token is missing or invalid",
+            "headers": {
+              "bearer": {
+                "style": "simple",
+                "explode": false,
+                "schema": {
+                  "type": "string",
+                  "description": "Bearer jwt token"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "developers"
+        ],
+        "summary": "Post a csv containing data. This will then be parsed and added to the system",
+        "operationId": "postData",
+        "parameters": [
+          {
+            "name": "systemId",
+            "in": "path",
+            "description": "System ID for a specific system",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Post a csv file containing operational data. This will then be parsed and added to the system",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/csv"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Succesfully added csv file to the system"
+          },
+          "401": {
+            "description": "Access token is missing or invalid",
+            "headers": {
+              "bearer": {
+                "style": "simple",
+                "explode": false,
+                "schema": {
+                  "type": "string",
+                  "description": "Bearer jwt token"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/systems/{systemId}/positions": {
+      "get": {
+        "tags": [
+          "developers"
+        ],
+        "summary": "Get all the positions of a specific vessel",
+        "description": "Get the latest position of all vessels that are in registered in the database.\n",
+        "operationId": "getPositions",
+        "parameters": [
+          {
+            "name": "systemId",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Getting a list of all available vessels and their latest ais positions.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/system"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access token is missing or invalid",
+            "headers": {
+              "bearer": {
+                "style": "simple",
+                "explode": false,
+                "schema": {
+                  "type": "string",
+                  "description": "Bearer jwt token"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/systems/{systemId}/vessel": {
+      "get": {
+        "tags": [
+          "developers"
+        ],
+        "summary": "Get the vessel information that is connected to a systemId",
+        "description": "Get the latest position of all vessels that are in registered in the database.\n",
+        "operationId": "getVessel",
+        "parameters": [
+          {
+            "name": "systemId",
+            "in": "path",
+            "description": "System ID",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Getting a list of all available vessels and their latest ais positions.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/vessel"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access token is missing or invalid",
+            "headers": {
+              "bearer": {
+                "style": "simple",
+                "explode": false,
+                "schema": {
+                  "type": "string",
+                  "description": "Bearer jwt token"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/vessels": {
+      "get": {
+        "tags": [
+          "developers"
+        ],
+        "summary": "Get a collection of registered vessels",
+        "description": "Get all available vessels in the database\n",
+        "operationId": "GetVessels",
+        "responses": {
+          "200": {
+            "description": "Getting a collection of all available vessels and their latest ais positions.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Element already exists"
+          }
+        }
+      }
+    },
+    "/vessels/{imo}": {
+      "get": {
+        "tags": [
+          "developers"
+        ],
+        "summary": "Get a specific vessel",
+        "description": "Get a specific vessel from the database\n",
+        "operationId": "GetLatestVesselsPositions",
+        "parameters": [
+          {
+            "name": "imo",
+            "in": "path",
+            "description": "Imo of the vessel to query",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Getting a specific vessel and their latest ais position.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/vessel"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Element already exists"
+          }
+        }
+      }
+    },
+    "/3dmodels/{guid}": {
+      "get": {
+        "tags": [
+          "developers"
+        ],
+        "summary": "Get a specific 3D model",
+        "description": "Get a specific 3D model from the database\n",
+        "operationId": "Get3DModel",
+        "parameters": [
+          {
+            "name": "guid",
+            "in": "path",
+            "description": "Guid of the 3d model to query",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Getting a specific 3D model",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/serverFile"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Element already exists"
+          }
+        }
+      }
+    },
+    "/customers": {
+      "get": {
+        "tags": [
+          "developers"
+        ],
+        "summary": "Get a list of all registered customers",
+        "description": "Get the all of the customers that are in registered in the database.\n",
+        "operationId": "GetCustomers",
+        "responses": {
+          "200": {
+            "description": "Getting a collection of all available customers.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/customerResponseObject"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access token is missing or invalid",
+            "headers": {
+              "bearer": {
+                "style": "simple",
+                "explode": false,
+                "schema": {
+                  "type": "string",
+                  "description": "Bearer jwt token"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "admins"
+        ],
+        "summary": "Update a customer",
+        "description": "Update a customer in the database\n",
+        "operationId": "PutCustomers",
+        "requestBody": {
+          "description": "Put",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/customerPostObject"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Succesfully updated a customer resource and returns this resource as a json object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/customerResponseObject"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access token is missing or invalid",
+            "headers": {
+              "bearer": {
+                "style": "simple",
+                "explode": false,
+                "schema": {
+                  "type": "string",
+                  "description": "Bearer jwt token"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Content of request breaks internal rules"
+          },
+          "409": {
+            "description": "Element already exists"
+          },
+          "422": {
+            "description": "Unable to process entity. Make sure fields are correct",
+            "headers": {
+              "WWW_Authenticate": {
+                "style": "simple",
+                "explode": false,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error during processing of request"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "developers"
+        ],
+        "summary": "Add a new customer",
+        "description": "Add a new customer to the database\n",
+        "operationId": "PostCustomers",
+        "requestBody": {
+          "description": "Post",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/customerPostObject"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Succesfully created a new customer resource and returns this resource as a json object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/customerResponseObject"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access token is missing or invalid",
+            "headers": {
+              "bearer": {
+                "style": "simple",
+                "explode": false,
+                "schema": {
+                  "type": "string",
+                  "description": "Bearer jwt token"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Content of request breaks internal rules"
+          },
+          "409": {
+            "description": "Element already exists"
+          },
+          "422": {
+            "description": "Unable to process entity. Make sure fields are correct",
+            "headers": {
+              "WWW_Authenticate": {
+                "style": "simple",
+                "explode": false,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error during processing of request"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "developers"
+        ],
+        "summary": "Delete a customer",
+        "description": "Delete a customer from the database\n",
+        "operationId": "DeleteCustomer",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "header",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Succesfully deleted a customer"
+          },
+          "401": {
+            "description": "Access token is missing or invalid",
+            "headers": {
+              "bearer": {
+                "style": "simple",
+                "explode": false,
+                "schema": {
+                  "type": "string",
+                  "description": "Bearer jwt token"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error during processing of request"
+          }
+        }
+      }
+    },
+    "/subscriptionkey": {
+      "get": {
+        "tags": [
+          "developers"
+        ],
+        "summary": "Get an api subscription key",
+        "description": "Get an api subscription key based on customer guid\n",
+        "operationId": "GetSubscriptionKey",
+        "parameters": [
+          {
+            "name": "subcriptionKeyGUID",
+            "in": "header",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Succesfully retrieved subscription key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/subscriptionKeyResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access token is missing or invalid",
+            "headers": {
+              "bearer": {
+                "style": "simple",
+                "explode": false,
+                "schema": {
+                  "type": "string",
+                  "description": "Bearer jwt token"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "login": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "Username that is used to login"
+          },
+          "password": {
+            "type": "string",
+            "description": "Password that is used to login"
+          }
+        }
+      },
+      "seal": {
+        "required": [
+          "id",
+          "size"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "System id",
+            "example": "x00001a"
+          },
+          "size": {
+            "type": "number",
+            "description": "Size of the seal in mm",
+            "example": 400
+          }
+        }
+      },
+      "system": {
+        "required": [
+          "id",
+          "seal",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of a system object such as a Ventus or Weardown. Use this to retrieve a specific system"
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of object as string"
+          },
+          "seal": {
+            "$ref": "#/components/schemas/seal"
+          },
+          "vessel": {
+            "$ref": "#/components/schemas/vessel"
+          },
+          "href": {
+            "type": "string",
+            "description": "Url description to get this specific system resource",
+            "nullable": true,
+            "example": "systems/{systemId}"
+          }
+        },
+        "example": {
+          "id": "x00001a",
+          "type": "ventus",
+          "seal": {
+            "id": "x00001a",
+            "size": 400
+          },
+          "vessel": {
+            "name": "Hello maritime world",
+            "imo": 1000000,
+            "mmsi": 10000000
+          }
+        }
+      },
+      "vessel": {
+        "required": [
+          "imo"
+        ],
+        "type": "object",
+        "properties": {
+          "imo": {
+            "type": "number",
+            "description": "Imo number used a unique identifier for a specific vessel - 7 digits.",
+            "example": 9123456
+          },
+          "AIS": {
+            "$ref": "#/components/schemas/AISPosition"
+          }
+        }
+      },
+      "aisPos": {
+        "maxItems": 5,
+        "minItems": 5,
+        "type": "array",
+        "example": [
+          1655787589,
+          54.42193,
+          10.21099,
+          10.4,
+          4.8
+        ],
+        "items": {
+          "type": "integer"
+        }
+      },
+      "AISMeta": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Vesselname",
+            "nullable": true,
+            "example": "Lagersmit vessel"
+          },
+          "heading": {
+            "type": "number",
+            "description": "Heading of the vessel",
+            "nullable": true,
+            "example": 345
+          },
+          "dest": {
+            "type": "string",
+            "description": "Destination goal of the vessel",
+            "nullable": true,
+            "example": "Amsterdam"
+          },
+          "imo": {
+            "type": "number",
+            "description": "IMO number of the vessel (Vessel Indentifcation Number)",
+            "nullable": true,
+            "example": 9123456
+          },
+          "mmsi": {
+            "type": "number",
+            "description": "MMSI number of the vessel radio equipment (Maritime Mobile Service Identity)",
+            "example": 305069000
+          },
+          "draught": {
+            "type": "number",
+            "description": "Current (last) draught of the vessel",
+            "example": 11.8
+          },
+          "callsign": {
+            "type": "string",
+            "description": "Callsign of the vessel",
+            "example": "C4GG2"
+          },
+          "cog": {
+            "type": "number",
+            "description": "Course over ground",
+            "example": 92.8
+          }
+        }
+      },
+      "AISPosition": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "$ref": "#/components/schemas/AISMeta"
+          },
+          "mmsi": {
+            "type": "string",
+            "description": "The unique identifier for AIS messages (id)",
+            "example": "305069000"
+          },
+          "datestring": {
+            "type": "string",
+            "description": "The date in readable string format",
+            "example": "yyyy-MM-dd HH:mm:ss"
+          },
+          "aisPos": {
+            "$ref": "#/components/schemas/aisPos"
+          }
+        },
+        "description": "The schema for an AIS position"
+      },
+      "files": {
+        "type": "object",
+        "properties": {
+          "csv": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/serverFile"
+            }
+          },
+          "pdf": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/serverFile"
+            }
+          },
+          "other": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/serverFile"
+            }
+          }
+        },
+        "description": "Short file representation"
+      },
+      "serverFile": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "example.type"
+          },
+          "createdDate": {
+            "type": "string",
+            "example": "03-08-1994 18:24:36"
+          },
+          "url": {
+            "type": "string",
+            "example": "./{type}/example.type"
+          }
+        },
+        "description": "Short file representation"
+      },
+      "csv": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "description": "Binary format of the csv file to upload",
+            "format": "binary"
+          },
+          "name": {
+            "type": "string",
+            "description": "name of the csv",
+            "example": "01.csv"
+          }
+        },
+        "description": "Representation of a csv file"
+      },
+      "pdf": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "byte"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "description": "Representation of a pdf file"
+      },
+      "stl": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "description": "Binary format of the stl file to download",
+            "format": "binary"
+          },
+          "name": {
+            "type": "string",
+            "description": "name of the stl",
+            "example": "ventus.stl"
+          }
+        },
+        "description": "Representation of an stl file"
+      },
+      "data": {
+        "type": "object"
+      },
+      "customerPostObject": {
+        "required": [
+          "contact",
+          "customerName"
+        ],
+        "type": "object",
+        "properties": {
+          "customerName": {
+            "type": "string",
+            "description": "The name of the company"
+          },
+          "address": {
+            "$ref": "#/components/schemas/customerPostObject_address"
+          },
+          "contact": {
+            "$ref": "#/components/schemas/customerPostObject_contact"
+          },
+          "systems": {
+            "type": "array",
+            "description": "a collection of systems owned by the customer",
+            "items": {
+              "$ref": "#/components/schemas/customerPostObject_systems"
+            }
+          }
+        },
+        "description": "Representation of a customer to post",
+        "example": {
+          "customerName": "Lagersmit",
+          "address": {
+            "street": "Nieuwland Parc 306",
+            "postalCode": "2952DD",
+            "city": "Ablasserdam",
+            "country": "The Netherlands"
+          },
+          "contact": {
+            "contactName": "Arjan Hasami",
+            "contactEmail": "arjan.hasami@lagersmit.com",
+            "contactPhone": 31619652664
+          },
+          "systems": [
+            {
+              "SerialNumber": "x00001a"
+            }
+          ]
+        }
+      },
+      "customerResponseObject": {
+        "type": "object",
+        "properties": {
+          "customerName": {
+            "type": "string",
+            "description": "The name of the company"
+          },
+          "address": {
+            "$ref": "#/components/schemas/customerPostObject_address"
+          },
+          "contact": {
+            "$ref": "#/components/schemas/customerResponseObject_contact"
+          },
+          "systems": {
+            "$ref": "#/components/schemas/customerResponseObject_systems"
+          },
+          "subscriptionKey": {
+            "type": "string",
+            "description": "the api subscription key. Can only be acquired as a response to a customer POST or as a GET from /subscription key"
+          },
+          "subscriptionKeyGUID": {
+            "type": "string",
+            "description": "the GUID that can be used to acquire the subscription key"
+          },
+          "href": {
+            "type": "string"
+          }
+        },
+        "description": "Representation of a customer a response from the server",
+        "example": {
+          "customerName": "Lagersmit",
+          "address": {
+            "street": "Nieuwland Parc 306",
+            "postalCode": "2952DD",
+            "city": "Ablasserdam",
+            "country": "The Netherlands"
+          },
+          "contact": {
+            "contactName": "Arjan Hasami",
+            "contactEmail": "arjan.hasami@lagersmit.com",
+            "contactPhone": 31619652664
+          },
+          "systems": {
+            "items": [
+              {
+                "SerialNumber": "x00001a",
+                "href": "https://portal.lagersmit.net/api/systems/x00001a"
+              }
+            ],
+            "href": "https://portal.lagersmit.net/api/customers/Lagersmit/systems"
+          },
+          "subscriptionKeyGUID": "adfsd-46343r-dfdfd3-4dfdfd",
+          "subscriptionKey": "cea44rxsvfy7895gddfdssa",
+          "href": "https://portal.lagersmit.net/api/customers/Lagersmit"
+        }
+      },
+      "subscriptionKeyResponse": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          }
+        },
+        "description": "Representation of a subscription key",
+        "example": {
+          "key": "adfs7dfs8dfs8df9sd8fsdfs9d8fd"
+        }
+      },
+      "inline_response_200": {
+        "type": "object",
+        "properties": {
+          "collection": {
+            "$ref": "#/components/schemas/inline_response_200_collection"
+          }
+        }
+      },
+      "customerPostObject_address": {
+        "type": "object",
+        "properties": {
+          "street": {
+            "type": "string",
+            "description": "The street the company is located in"
+          },
+          "postalCode": {
+            "type": "string",
+            "description": "The postal code of the company"
+          },
+          "city": {
+            "type": "string",
+            "description": "The city the company is located in"
+          },
+          "country": {
+            "type": "string",
+            "description": "The country the company is located in"
+          }
+        },
+        "description": "The address of the company"
+      },
+      "customerPostObject_contact": {
+        "required": [
+          "contactEmail",
+          "contactName"
+        ],
+        "type": "object",
+        "properties": {
+          "contactName": {
+            "type": "string",
+            "description": "The name of the contact person"
+          },
+          "contactEmail": {
+            "type": "string",
+            "description": "The email of the contact person"
+          },
+          "contactPhone": {
+            "type": "string",
+            "description": "The phone number of the contact person"
+          }
+        },
+        "description": "The contactperson for the company"
+      },
+      "customerPostObject_systems": {
+        "required": [
+          "SerialNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "SerialNumber": {
+            "type": "string"
+          }
+        }
+      },
+      "customerResponseObject_contact": {
+        "type": "object",
+        "properties": {
+          "contactName": {
+            "type": "string",
+            "description": "The name of the contact person"
+          },
+          "contactEmail": {
+            "type": "string",
+            "description": "The email of the contact person"
+          },
+          "contactPhone": {
+            "type": "string",
+            "description": "The phone number of the contact person"
+          }
+        },
+        "description": "The contactperson for the company"
+      },
+      "customerResponseObject_systems_items": {
+        "properties": {
+          "SerialNumber": {
+            "type": "string"
+          },
+          "href": {
+            "type": "string"
+          }
+        }
+      },
+      "customerResponseObject_systems": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/customerResponseObject_systems_items"
+            }
+          },
+          "href": {
+            "type": "string"
+          }
+        },
+        "description": "a collection of systems owned by the customer"
+      },
+      "inline_response_200_collection": {
+        "type": "object",
+        "properties": {
+          "href": {
+            "type": "string",
+            "example": "https://portal.lagersmit.net/api/vessels/aispositions"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/vessel"
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "UnauthorizedError": {
+        "description": "Access token is missing or invalid",
+        "headers": {
+          "bearer": {
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "description": "Bearer jwt token"
+            }
+          }
+        }
+      },
+      "ConflictError": {
+        "description": "Conflict creating or updating document",
+        "headers": {
+          "WWW_Authenticate": {
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "UnprocessableEntityError": {
+        "description": "Unable to process entity. Make sure fields are correct",
+        "headers": {
+          "WWW_Authenticate": {
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "UnavailableError": {
+        "description": "Element already exists"
+      },
+      "NotAcceptableError": {
+        "description": "Content of request breaks internal rules"
+      },
+      "InternalServerError": {
+        "description": "Internal server error during processing of request"
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
